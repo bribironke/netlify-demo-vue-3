@@ -1,6 +1,8 @@
-
+import * as dotenv from 'dotenv'
 import { Handler } from "@netlify/functions";
 import { createClient } from '@supabase/supabase-js'
+
+dotenv.config({ path: __dirname+'/.env' })
 
 export const handler: Handler = async () => {
 
