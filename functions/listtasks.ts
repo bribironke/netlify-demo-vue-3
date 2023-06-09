@@ -8,7 +8,12 @@ export const supabase = createClient(
 )
 
 export const handler: Handler = async () => { 
-  const { data } = await supabase.from('task').select('*')
+  // const { data } = await supabase.from('task').select('*')
+  const data = [
+    { id: 1, name: "Let's eat" },
+    { id: 2, name: "Another" },
+    { id: 3, name: "Yet another" },
+  ]
 
   return {
     statusCode: 200,
