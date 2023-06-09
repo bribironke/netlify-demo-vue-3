@@ -1,85 +1,92 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+import { onMounted, ref } from 'vue'
+import type { iTask } from './types';
+
+const tasks = ref<iTask[]>([])
+const newTaskInput = ref("")
+
+const addTask = async () => {
+  let response = await fetch("https://netlify-demo-vue-3.netlify.app/.netlify/functions/addtask", {
+    method: "post",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      name: newTaskInput.value
+    })
+  })
+  
+  const newTask = await response.json()
+  tasks.value.push(newTask[0])
+  newTaskInput.value = ""
+}
+
+const removeTask = async (id: number) => {
+  await fetch("https://netlify-demo-vue-3.netlify.app/.netlify/functions/deletetask", {
+    method: "delete",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ id  })
+  })
+  tasks.value = tasks.value.filter(t => t.id !== id)
+}
+
+onMounted(async () => {
+  const response = await fetch("https://netlify-demo-vue-3.netlify.app/.netlify/functions/listtasks")
+  tasks.value = await response.json()
+})
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="My Todo App in Netlify" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
+  <div id="app">
+    <h1>Vue Todo App</h1>
+    <div class="add-task-wrapper">
+      <input type="text" v-model="newTaskInput" @keydown.enter="addTask">
+      <button @click="addTask">Add task</button>
     </div>
-  </header>
-
-  <RouterView />
+    <div class="task" v-for="task in tasks" :key="task.id">
+      <div class="task-main">
+        <span>{{ task.name }}</span>
+        <span class="buttons">
+          <button @click="removeTask(task.id)">❌</button>
+        </span>
+      </div>
+    </div>
+  </div>
 </template>
 
 <style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-nav {
+#app {
+  font-family: Arial, Helvetica, sans-serif;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  row-gap: 8px;
   width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
+  max-width: 300px;
+  margin: 0 auto
+}
+.add-task-wrapper {
+  display: flex;
+  column-gap: 16px;
 }
 
-nav a.router-link-exact-active {
-  color: var(--color-text);
+.add-task-wrapper input {
+  flex: 1;
 }
 
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
+.task {
+  margin: 8px 0;
+  background-color: #eaeded;
+  padding: 8px;
+  box-shadow: 0 2px 5px 0 rgba(0,0,0,0.2);
 }
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
+.task-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
 }
 </style>

@@ -11,6 +11,8 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
   },
   "dependencies": {
+    "@netlify/functions": "^1.6.0",
+    "@supabase/supabase-js": "^2.24.0",
     "vue": "^3.3.2",
     "vue-router": "^4.2.0"
   },

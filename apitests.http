@@ -1,0 +1,21 @@
+get http://localhost:8888/.netlify/functions/hello
+
+###
+post http://localhost:8888/.netlify/functions/addtask
+Content-Type: application/json
+
+{
+  "name": "play chess"
+}
+
+###
+get http://localhost:8888/.netlify/functions/listtasks
+
+
+###
+delete http://localhost:8888/.netlify/functions/deletetask
+Content-Type: application/json
+
+{
+  "id": "9"
+}
