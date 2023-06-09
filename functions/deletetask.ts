@@ -1,6 +1,7 @@
 
 import { Handler, HandlerEvent } from "@netlify/functions";
 import { createClient } from '@supabase/supabase-js'
+import "dotenv/config"
 
 export const supabase = createClient(
   process.env.SUPABASE_URL as string,
