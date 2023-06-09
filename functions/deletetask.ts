@@ -1,6 +1,11 @@
 
 import { Handler, HandlerEvent } from "@netlify/functions";
-import { supabase } from "./supabase";
+import { createClient } from '@supabase/supabase-js'
+
+export const supabase = createClient(
+  process.env.SUPABASE_URL as string,
+  process.env.SUPABASE_KEY as string
+)
 
 export const handler: Handler = async (
   event: HandlerEvent
