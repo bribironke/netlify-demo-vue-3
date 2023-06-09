@@ -13,6 +13,7 @@
   "dependencies": {
     "@netlify/functions": "^1.6.0",
     "@supabase/supabase-js": "^2.24.0",
+    "bufferutil": "^4.0.7",
     "vue": "^3.3.2",
     "vue-router": "^4.2.0"
   },
